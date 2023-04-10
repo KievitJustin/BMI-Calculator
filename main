@@ -1,0 +1,55 @@
+
+from datetime import timedelta, date
+
+# BMI Categories:
+# Underweight = <18.5
+# Normal weight = 18.5–24.9
+# Overweight = 25–29.9
+# Obesity = BMI of 30 or greater
+
+menu = '''\nSelect option: 
+1. Calculate BMI
+2. Sign Up
+3. Sign In
+4. 
+5. '''
+
+
+def prompt_calculate_BMI():
+
+    data = {70 : 166}
+
+    height = int(input("Height (inches): "))
+    weight = int(input("Weight (lbs) : "))
+
+    for k, v in data.items():
+        ideal_weight = v
+        pounds_to_lose = weight - ideal_weight
+        calories_to_lose = pounds_to_lose * 3500
+        days_it_would_take = calories_to_lose / 500
+
+        today_date = date.today()
+        goal_date = today_date + timedelta(days=days_it_would_take)
+        new_goal_date = goal_date.strftime("%m/%d/%Y")
+
+        BMI = (weight / height / height) * 703
+        weight_list = ["underweight", "normal weight", "overweight", "obese"]
+
+        if BMI < 18.5:
+            print(f'Your BMI is {round(BMI, 3)}, which is considered {weight_list[0]}.')
+        elif BMI > 18.5 and BMI < 24.9:
+            print(f'Your BMI is {round(BMI, 3)}, which is considered {weight_list[1]}.')
+        elif BMI > 25 and BMI < 29.9:
+            print(f'\nYou are {weight_list[2]}! \nA healthy BMI for a {height} inch male is between 18.5 and 24.9. Yours is {round(BMI, 3)}.')
+            print(f'\nFollow our program to most efficiently burn the {pounds_to_lose} pounds preventing you from having a healthy BMI by {new_goal_date}. Would you like to get started?')
+        elif BMI > 30:
+            print(f'Your BMI is {round(BMI, 3)}, which is considered {weight_list[3]}.')
+
+
+while (user_input := input(menu)) != "8":
+    if user_input == '1':
+        prompt_calculate_BMI()
+    else:
+        pass
+
+
