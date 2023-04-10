@@ -17,7 +17,13 @@ menu = '''\nSelect option:
 
 def prompt_calculate_BMI():
 
-    data = {70 : 166}
+    data = {54: 70,  55: 76,  56: 82,  57: 88,  58: 94,  59: 100, 60: 106,
+            61: 112, 62: 118, 63: 124, 64: 130, 65: 136, 66: 142, 67: 148,
+            68: 154, 69: 160, 70: 166, 71: 172, 72: 178, 73: 184, 74: 190,
+            75: 196, 76: 202, 77: 208, 78: 214, 79: 220, 80: 226, 81: 232,
+            82: 238, 83: 244, 84: 250}
+
+    # data = {70: 166}
 
     height = int(input("Height (inches): "))
     weight = int(input("Weight (lbs) : "))
@@ -25,6 +31,9 @@ def prompt_calculate_BMI():
     for k, v in data.items():
         ideal_weight = v
         pounds_to_lose = weight - ideal_weight
+        # pounds_to_gain = ideal_weight - weight
+
+
         calories_to_lose = pounds_to_lose * 3500
         days_it_would_take = calories_to_lose / 500
 
@@ -36,14 +45,23 @@ def prompt_calculate_BMI():
         weight_list = ["underweight", "normal weight", "overweight", "obese"]
 
         if BMI < 18.5:
-            print(f'Your BMI is {round(BMI, 3)}, which is considered {weight_list[0]}.')
+            print(f'\nYou are {weight_list[0]}! \nA healthy BMI for a {height} inch person is between 18.5 and 24.9. Yours is {round(BMI, 3)}.')
+            # print(f'You need to gain {pounds_to_gain} for a healthy BMI. ')
+            break
         elif BMI > 18.5 and BMI < 24.9:
-            print(f'Your BMI is {round(BMI, 3)}, which is considered {weight_list[1]}.')
+            print(f'Congratulations! Your BMI is {round(BMI, 3)}, which is considered {weight_list[1]}.')
+            exit()
         elif BMI > 25 and BMI < 29.9:
             print(f'\nYou are {weight_list[2]}! \nA healthy BMI for a {height} inch male is between 18.5 and 24.9. Yours is {round(BMI, 3)}.')
-            print(f'\nFollow our program to most efficiently burn the {pounds_to_lose} pounds preventing you from having a healthy BMI by {new_goal_date}. Would you like to get started?')
+            print(f'\nBy following our program you will lose the {pounds_to_lose} pounds preventing you from having a healthy BMI by {new_goal_date}. Would you like to get started?')
+            break
         elif BMI > 30:
             print(f'Your BMI is {round(BMI, 3)}, which is considered {weight_list[3]}.')
+            break
+    else:
+        pass
+
+
 
 
 while (user_input := input(menu)) != "8":
