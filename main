@@ -1,73 +1,80 @@
-
-from datetime import timedelta, date
-
-# BMI Categories:
-# Underweight = <18.5
-# Normal weight = 18.5–24.9
-# Overweight = 25–29.9
-# Obesity = BMI of 30 or greater
-
-menu = '''\nSelect option: 
-1. Calculate BMI
-2. Sign Up
-3. Sign In
-4. 
-5. '''
+from datetime import datetime, timedelta
 
 
-def prompt_calculate_BMI():
+class BMI_Calculator:
 
-    data = {54: 70,  55: 76,  56: 82,  57: 88,  58: 94,  59: 100, 60: 106,
-            61: 112, 62: 118, 63: 124, 64: 130, 65: 136, 66: 142, 67: 148,
-            68: 154, 69: 160, 70: 166, 71: 172, 72: 178, 73: 184, 74: 190,
-            75: 196, 76: 202, 77: 208, 78: 214, 79: 220, 80: 226, 81: 232,
-            82: 238, 83: 244, 84: 250}
+    def __init__(self, height, weight):
+        self.height = height
+        self.weight = weight
+        self.bmi = None
 
-    # data = {70: 166}
+    def calculate_bmi(self):
+        self.bmi = (self.weight / (self.height * self.height)) * 703
 
-    height = int(input("Height (inches): "))
-    weight = int(input("Weight (lbs) : "))
+        return self.bmi
 
-    for k, v in data.items():
-        ideal_weight = v
-        pounds_to_lose = weight - ideal_weight
-        # pounds_to_gain = ideal_weight - weight
+    def get_weight_status(self):
+        if self.bmi < 18.5:
+            return 'Underweight'
+        elif 18.5 <= self.bmi <= 24.9:
+            return 'Normal weight'
+        elif 25 <= self.bmi <= 29.9:
+            return 'Overweight'
+        else:
+            return 'Obesity'
 
-
+    def days_to_healthy_bmi(self):
+        ideal_weight = (self.height * self.height) * 25
+        pounds_to_lose = self.weight - (ideal_weight / 703)
         calories_to_lose = pounds_to_lose * 3500
-        days_it_would_take = calories_to_lose / 500
+        days_to_lose = calories_to_lose / 500
 
-        today_date = date.today()
-        goal_date = today_date + timedelta(days=days_it_would_take)
+        today_date = datetime.today().date()
+        goal_date = today_date + timedelta(days=days_to_lose)
         new_goal_date = goal_date.strftime("%m/%d/%Y")
 
-        BMI = (weight / height / height) * 703
-        weight_list = ["underweight", "normal weight", "overweight", "obese"]
-
-        if BMI < 18.5:
-            print(f'\nYou are {weight_list[0]}! \nA healthy BMI for a {height} inch person is between 18.5 and 24.9. Yours is {round(BMI, 3)}.')
-            # print(f'You need to gain {pounds_to_gain} for a healthy BMI. ')
-            break
-        elif BMI > 18.5 and BMI < 24.9:
-            print(f'Congratulations! Your BMI is {round(BMI, 3)}, which is considered {weight_list[1]}.')
-            exit()
-        elif BMI > 25 and BMI < 29.9:
-            print(f'\nYou are {weight_list[2]}! \nA healthy BMI for a {height} inch male is between 18.5 and 24.9. Yours is {round(BMI, 3)}.')
-            print(f'\nBy following our program you will lose the {pounds_to_lose} pounds preventing you from having a healthy BMI by {new_goal_date}. Would you like to get started?')
-            break
-        elif BMI > 30:
-            print(f'Your BMI is {round(BMI, 3)}, which is considered {weight_list[3]}.')
-            break
-    else:
-        pass
+        return round(days_to_lose), new_goal_date
 
 
+class BMI_App:
+
+    def __init__(self):
+        self.menu = '''Select option: 
+1. Calculate BMI
+2. Exit
+'''
+
+    def run(self):
+        while True:
+            user_input = input(self.menu)
+            if user_input == '1':
+                height = float(input("Enter your height in inches: "))
+                weight = float(input("Enter your weight in pounds: "))
+                bmi_calculator = BMI_Calculator(height, weight)
+                bmi_calculator.calculate_bmi()
+                weight_status = bmi_calculator.get_weight_status()
+
+                if weight_status == 'Underweight':
+                    print(
+                        f'\nYou are {weight_status}! A healthy BMI for a {height} inch person is between 18.5 and 24.9. Yours is {round(bmi_calculator.bmi, 3)}.')
+                elif weight_status == 'Normal weight':
+                    print(
+                        f'Congratulations! Your BMI is {round(bmi_calculator.bmi, 3)}, which is considered {weight_status}.')
+                elif weight_status == 'Overweight':
+                    days_to_lose, goal_date = bmi_calculator.days_to_healthy_bmi()
+                    print(
+                        f'\nYou are {weight_status}! A healthy BMI for a {height} inch male is between 18.5 and 24.9. Yours is {round(bmi_calculator.bmi, 3)}.')
+                    print(
+                        f'By losing 500 calories per day, you will lose the {round((bmi_calculator.weight - (bmi_calculator.height * bmi_calculator.height * 25 / 703)), 2)} pounds preventing you from having a healthy BMI by {goal_date}.')
+                else:
+                    print(f'Your BMI is {round(bmi_calculator.bmi, 3)}, which is considered {weight_status}.')
+            elif user_input == '2':
+                print('Exiting program...')
+                break
+            else:
+                print('Invalid input! Please select a valid option.')
 
 
-while (user_input := input(menu)) != "8":
-    if user_input == '1':
-        prompt_calculate_BMI()
-    else:
-        pass
-
-
+if __name__ == '__main__':
+    app = BMI_App()
+    app.run()
